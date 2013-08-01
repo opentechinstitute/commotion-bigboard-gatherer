@@ -1,0 +1,6 @@
+{
+ "bigboard_use_remote_server":true,
+ "bigboard_remote_server":"IPORDOMAIN",
+ "bigboard_remote_user":"bigboard",
+ "bigboard_nodes_json_path":"."
+}
