@@ -4,11 +4,13 @@ import  json
 import urllib2
 import collections
 
+# TODO determine this on the fly or statically set in a more reasonable way
+pwd = '/home/bigboard/ffhmap/'
 ip_mac_map = collections.defaultdict(lambda: None, {})
 links = {}
 nodes = []
 
-config = json.loads(open('bigboard-server-config', 'r').read())
+config = json.loads(open(pwd +'bigboard-server-config', 'r').read())
 
 # this function takes a url of the json file, and returns a decoded json obj
 def decode_json(url):
@@ -48,7 +50,7 @@ def parse_node(decoded_json):
 # since ffhmap wants MAC addresses, and OLSR info deals in IP addresses, we 
 # will have to map those pieces of data, and build link information only after
 # we have gone through all the nodes, and recorded their mac addresses.
-for ip in open('monitored-nodes', 'r').readlines():
+for ip in open(pwd +'monitored-nodes', 'r').readlines():
     url = 'http://'+ip+':9090/all'
     nodes.append(parse_node(decode_json(url)))
 
