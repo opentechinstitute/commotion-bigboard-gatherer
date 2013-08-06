@@ -11,14 +11,14 @@ Installation/ Configuration
 ------------
 
 ### On the node
-Currently the only configuration change on the nodes is a change to "/etc/config/olsrd" look for this block:
+Currently the only configuration change on the nodes is a change to "/etc/config/olsrd" look for a block like:
 
     config LoadPlugin
             option library 'olsrd_jsoninfo.so.0.0'
             option accept '0.0.0.0'
             option UUIDFile '/etc/olsrd.d/olsrd.uuid'
         
-Change the "accept" option to the IP address of the gatherer.
+Change the "accept" option to the IP address of the gatherer, or to 0.0.0.0 to allow everyone who can see the node get the OLSR info.
 
 ### On the gatherer
 The gatherer is written assuming Linux with a standard python install.
@@ -29,7 +29,7 @@ Currently the gatherer has two configuration files.
 The "monitored-nodes" file is currently a simple text file with the IP address per line for each node that is being monitored.
 
 #### bigboard-server-config
-The "bigboard-server-config" file is a JSON Formatted file that contains a few settings for how the gatherer should behave. Currently it has three values:
+The "bigboard-server-config" file is a JSON Formatted file that contains a few settings for how the gatherer should behave. Currently it has four values:
 
     {
       "bigboard_use_remote_server":false,
@@ -52,6 +52,8 @@ Big Board Server
 ----------------
 
 The big board server is currently just a clone of [the FreiFunk D3 map](https://github.com/tcatm/ffmap-d3), the gatherer simply supplies the nodes.json file that the map needs to display the nodes.
+
+Until remote connections are handled, the bigboard_nodes_json_path variable will be used to write the nodes.json file somewhere locally.
 
 TODOs
 -----
