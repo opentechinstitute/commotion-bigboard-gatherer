@@ -21,6 +21,8 @@ Currently the only configuration change on the nodes is a change to "/etc/config
 Change the "accept" option to the IP address of the gatherer.
 
 ### On the gatherer
+The gatherer is written assuming Linux with a standard python install.
+
 Currently the gatherer has two configuration files.
 
 #### monitored-nodes
@@ -41,6 +43,10 @@ The "bigboard-server-config" file is a JSON Formatted file that contains a few s
 1. bigboard_remote_user is the user on the remote machine that will receive the compiled data.
 1. bigboard_nodes_json_path is the path __both local and remote__ 
 
+#### Other configurations
+If the bigboard gatherer is running on a client that is not itself a node in the mesh, you will need to add some routing information to the gatherer server. Essentially you need to route requests for 5.0.0.0/8 through the wireless AP to keep those addresses from resolving on the wider internet. Assuming you are connected to a node with the IP 103.75.125.1 this command should work:
+
+    ip route add 5.0.0.0/8 via 103.75.125.1
 
 Big Board Server
 ----------------
