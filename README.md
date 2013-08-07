@@ -20,6 +20,9 @@ Currently the only configuration change on the nodes is a change to "/etc/config
         
 Change the "accept" option to the IP address of the gatherer, or to 0.0.0.0 to allow everyone who can see the node get the OLSR info.
 
+Don't forget to restart OLSR for the change to take effect! If you are SSH'd in to the node, this should work:
+    /etc/init.d/olsr restart
+
 ### On the gatherer
 The gatherer is written assuming Linux with a standard python install.
 
