@@ -52,6 +52,11 @@ If the bigboard gatherer is running on a client that is not itself a node in the
 
     ip route add 5.0.0.0/8 via 103.75.125.1
 
+Once that is set up, the last step is to add a cron job for the script, so that the node data gets regularly updated. This example will set it to update every minute.
+
+    * * * * *  /usr/bin/python /home/bigboard/ffhmap/ffmap-node-data.py
+    
+
 Big Board Server
 ----------------
 
