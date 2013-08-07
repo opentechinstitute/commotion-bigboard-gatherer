@@ -6,10 +6,13 @@ import collections
 
 # TODO determine this on the fly or statically set in a more reasonable way
 pwd = '/home/bigboard/ffhmap/'
+
+# create some sets arrays, etc, for passing data around
 ip_mac_map = collections.defaultdict(lambda: None, {})
 links = {}
 nodes = []
 
+# load the config file
 config = json.loads(open(pwd +'bigboard-server-config', 'r').read())
 
 # this function takes a url of the json file, and returns a decoded json obj
@@ -24,17 +27,35 @@ def decode_json(url):
 # data. additionally, this function will build an IP MAC address table.
 def parse_node(decoded_json):
     # grab some stuff that we know about the node.
+
+    # TODO this probably shouldn't be hard coded, but we should find out what
+    #      the d3 model for multi-radios should be.
     ip4addr = decoded_json['interfaces'][0]['ipv4Address']
     deviceMac = decoded_json['interfaces'][0]['macAddress']
     deviceName = decoded_json['interfaces'][0]['name']
-    host = decoded_json['config']['olsrdBuildHost']
-    # set the gateway value
-    gateway = True
+
+    # this should give us the correct hostname assuming a standard commotion
+    host = None
+    for i, plugin in enumerate(decoded_json['plugins']):
+        if plugin['plugin'] == 'olsrd_nameservice.so.0.3':
+            host = plugin['name']
+
+
+
+    # for now we are assuming that returned nodes are online, since we're
+    # not yet consulting any sort of data store.
     online = True
-    client = True
+    # haven't yet figured out how to check clients from the olsr info that
+    # makes this a pretty big TODO. 
+    client = False
+    # eventually we should have a field to enter coordinates, or possibly
+    # some sort of Open Street Map geo picker. Until then, this in null.
     geo = None 
-    if decoded_json['config']['hasIpv4Gateway'] is False and decoded_json['config']['hasIpv6Gateway'] is False:
-        gateway = False       
+
+    # figure out if this node is a gateway
+    gateway = False
+    if decoded_json['config']['hasIpv4Gateway'] is True or decoded_json['config']['hasIpv6Gateway'] is True:
+        gateway = True 
 
         # pass some data to sets outside the function
 
@@ -45,6 +66,7 @@ def parse_node(decoded_json):
 
         # return the ffhmap formatted data
     return {'id' : deviceMac, 'name' : host, 'flags' : {'client' : client, 'online' : online, 'gateway' : gateway }, 'geo' : geo}
+
 
 # this loop will pull the node info, and build a set with all of relevant info;
 # since ffhmap wants MAC addresses, and OLSR info deals in IP addresses, we 
