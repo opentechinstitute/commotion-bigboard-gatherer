@@ -36,12 +36,14 @@ The "monitored-nodes" file is currently a simple text file with the IP address p
 The "bigboard-server-config" file is a JSON Formatted file that contains a few settings for how the gatherer should behave. Currently it has four values:
 
     {
+      "bigboard_debug":false,
       "bigboard_use_remote_server":false,
       "bigboard_remote_server":"127.0.0.1",
       "bigboard_remote_user":"bigboard",
       "bigboard_nodes_json_path":"."
     }
    
+1. bigboard_debug is a development flag used at times to make the script behave differently during development. Will probably be replaced by verbosity at some point. This should probably just be left as false.
 1. bigboard_use_remote_server is a boolean, and is checked so that the gatherer knows what to do with compiled data.
 1. bigboard_remote_server is the IP or domain name of the remote bigboard server
 1. bigboard_remote_user is the user on the remote machine that will receive the compiled data.

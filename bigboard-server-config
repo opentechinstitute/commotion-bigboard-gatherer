@@ -1,6 +1,7 @@
 {
- "bigboard_use_remote_server":true,
+ "bigboard_debug":false,
+ "bigboard_use_remote_server":false,
  "bigboard_remote_server":"IPORDOMAIN",
  "bigboard_remote_user":"bigboard",
- "bigboard_nodes_json_path":"."
+ "bigboard_nodes_json_path":"/home/bigboard/ffmap-d3"
 }
