@@ -22,7 +22,7 @@ Change the "accept" option to the IP address of the gatherer, or to 0.0.0.0 to a
 
 Don't forget to restart OLSR for the change to take effect! If you are SSH'd in to the node, this should work:
 
-    /etc/init.d/olsr restart
+    /etc/init.d/olsrd restart
 
 ### On the gatherer
 The gatherer is written assuming Linux with a standard python install.
