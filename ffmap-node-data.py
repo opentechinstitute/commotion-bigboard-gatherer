@@ -64,19 +64,13 @@ def parse_node(decoded_json):
 # since ffhmap wants MAC addresses, and OLSR info deals in IP addresses, we 
 # will have to map those pieces of data, and build link information only after
 # we have gone through all the nodes, and recorded their mac addresses.
-for ip in open(pwd +'monitored-nodes', 'r').readlines():
-    url = 'http://'+ip+':9090/all'
-    try: 
-        pulled_json = urllib2.urlopen(url).read()        
-    except:
-        pulled_json = None
-        
-    if pulled_json is not None:
-        try:
-            decoded = json.loads(pulled_json)
-        except (ValueError, KeyError, TypeError):
-            decoded = None
-
+nodespath = '/home/bigboard/ffmap-d3/bigboard-nodes'
+for node in os.listdir(nodespath):
+    nodefile = open(nodespath +'/'+ node)
+    try:
+        decoded = json.loads(nodefile.read())
+    except (ValueError, KeyError, TypeError):
+        decoded = None
     if decoded is not None:
         nodes.append(parse_node(decoded))
 
