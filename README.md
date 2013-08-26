@@ -1,9 +1,9 @@
 commotion-bigboard-gatherer
 ===========================
 
-A collection of scripts to gather data about nodes on a mesh
+A collection of scripts to compile data about nodes on a mesh
 
-In order to save space on nodes (particularly embedded routers), we rely on the OLSR plugin JSONinfo. The gatherer pulls in data from all nodes that its is configured to poll (provided they allow it). This approach allows big-board the option of storing more than just the current status of the mesh, and limits the possible off-mesh connections to a bigboard-server.
+In order to save space on nodes (particularly embedded routers), we rely on the OLSR plugin JSONinfo, curl and simple shell scripts. The listener takes data from nodes, and writes a file with their JSONinfo. The gatherer in turn takes that data from all nodes and compiles it into a format that the D3 visualizer can read. This approach allows big-board the option of storing more than just the current status of the mesh, and will eventually support multiple Commotion mesh networks.
 
 The gatherer can write a file locally (file system permissions permitting), or via SSH to a remote bigboard server (NOTE: this feature is incomplete).
 
@@ -11,26 +11,23 @@ Installation/ Configuration
 ------------
 
 ### On the node
-Currently the only configuration change on the nodes is a change to "/etc/config/olsrd" look for a block like:
+The nodes should have a configuration page in the Commotion menu. This should modify the `/etc/config/commotion-dash` file. The file looks something like:
 
-    config LoadPlugin
-            option library 'olsrd_jsoninfo.so.0.0'
-            option accept '0.0.0.0'
-            option UUIDFile '/etc/olsrd.d/olsrd.uuid'
-        
-Change the "accept" option to the IP address of the gatherer, or to 0.0.0.0 to allow everyone who can see the node get the OLSR info.
+    config dashboard
+            option gatherer '103.75.125.142'
+            option enabled 'true'
+                
+                
+These configurations are read by the `commotion-bigboard-send` script (`/usr/bin/commotion-bigboard-send`), which sends that information to the gaterer.
 
-Don't forget to restart OLSR for the change to take effect! If you are SSH'd in to the node, this should work:
+Until the packaging is complete, you will need to install curl. This command should do it:
 
-    /etc/init.d/olsrd restart
-
+    opkg update; opkg install curl
+    
 ### On the gatherer
-The gatherer is written assuming Linux with a standard python install.
+The gatherer is written assuming Linux with a standard python install, and a web server that allows the execution of python scripts.
 
-Currently the gatherer has two configuration files.
-
-#### monitored-nodes
-The "monitored-nodes" file is currently a simple text file with the IP address per line for each node that is being monitored.
+The gatherer keeps its configuration in a json file
 
 #### bigboard-server-config
 The "bigboard-server-config" file is a JSON Formatted file that contains a few settings for how the gatherer should behave. Currently it has four values:
@@ -50,11 +47,7 @@ The "bigboard-server-config" file is a JSON Formatted file that contains a few s
 1. bigboard_nodes_json_path is the path __both local and remote__ 
 
 #### Other configurations
-If the bigboard gatherer is running on a client that is not itself a node in the mesh, you will need to add some routing information to the gatherer server. Essentially you need to route requests for 5.0.0.0/8 through the wireless AP to keep those addresses from resolving on the wider internet. Assuming you are connected to a node with the IP 103.75.125.1 this command should work:
-
-    ip route add 5.0.0.0/8 via 103.75.125.1
-
-Once that is set up, the last step is to add a cron job for the script, so that the node data gets regularly updated. This example will set it to update every minute.
+The last step is to add a cron job for the script, so that the node data gets regularly updated. This example will set it to update every minute.
 
     * * * * *  /usr/bin/python /home/bigboard/ffhmap/ffmap-node-data.py
     
@@ -62,7 +55,7 @@ Once that is set up, the last step is to add a cron job for the script, so that 
 Big Board Server
 ----------------
 
-The big board server is currently just a clone of [the FreiFunk D3 map](https://github.com/tcatm/ffmap-d3), the gatherer simply supplies the nodes.json file that the map needs to display the nodes.
+[The big board server](https://github.com/opentechinstitute/ffmap-d3) is currently a modified clone of [the FreiFunk D3 map](https://github.com/tcatm/ffmap-d3), the listener and the gatherer supply the nodes.json file that the map needs to display the nodes.
 
 Until remote connections are handled, the bigboard_nodes_json_path variable will be used to write the nodes.json file somewhere locally.
 
