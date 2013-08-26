@@ -1,11 +1,10 @@
 #!/usr/bin/python
 import  os
 import  json
-import urllib2
 import collections
 
-# TODO determine this on the fly or statically set in a more reasonable way
-pwd = '/home/bigboard/commotion-bigboard-gatherer/'
+pwd = os.getcwd()
+nodespath = pwd +'/bigboard-nodes'
 
 # create some sets arrays, etc, for passing data around
 ip_mac_map = collections.defaultdict(lambda: None, {})
@@ -64,7 +63,6 @@ def parse_node(decoded_json):
 # since ffhmap wants MAC addresses, and OLSR info deals in IP addresses, we 
 # will have to map those pieces of data, and build link information only after
 # we have gone through all the nodes, and recorded their mac addresses.
-nodespath = '/home/bigboard/ffmap-d3/bigboard-nodes'
 for node in os.listdir(nodespath):
     nodefile = open(nodespath +'/'+ node)
     try:
