@@ -12,7 +12,7 @@ links = {}
 nodes = []
 
 # load the config file
-config = json.loads(open(pwd +'bigboard-server-config', 'r').read())
+config = json.loads(open(pwd +'/bigboard-server-config', 'r').read())
 
 # this function takes decoded json from decode_json() and parses out the node
 # data. additionally, this function will build an IP MAC address table.
